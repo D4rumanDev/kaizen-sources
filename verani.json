@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "version": 7,
+  "id": "verani",
+  "name": "verani.me",
+  "badge": "VA",
+  "host": "verani.me",
+  "base": "https://verani.me",
+  "search": { "text": "alone", "filters": ["GENRE", "AIRING"] },
+  "browserUa": true,
+  "chapterLinks": true,
+  "coverPrefixes": ["https://image.tmdb.org/t/p/", "https://verani.me/wp-content/uploads/"],
+  "coverFallback": "",
+  "coverReject": "Gemini_Generated_Image_y27f1qy27f1qy27f",
+  "slug": {
+    "regex": "^https://verani\\.me/([a-z0-9-]+)(?:/|\\?|$)",
+    "reserved": ["animes", "animes-vistos", "peliculas", "tops", "chat", "login", "registro", "peticiones", "proximos-capitulos", "mis-favoritos", "continua-viendo", "wp-json", "feed", "author", "page", "descarga"]
+  },
+  "urls": {
+    "anime": "{base}/{slug}/",
+    "listFirst": "{base}/animes/",
+    "listNext": "{base}/animes/page/{page}/",
+    "genreFirst": "{base}/animes/{genre}/",
+    "genreNext": "{base}/animes/{genre}/page/{page}/",
+    "searchFirst": "{base}/?s={query}",
+    "searchNext": "{base}/page/{page}/?s={query}"
+  },
+  "cards": {
+    "item": ".anime-card",
+    "link": [
+      { "sel": "a.card-link[href]", "attr": "href" },
+      { "attr": "onclick", "regex": "location\\.href\\s*=\\s*'([^']+)'" }
+    ],
+    "name": { "sel": "img", "attr": "alt" },
+    "cover": { "sel": "img", "attr": "src" },
+    "year": { "sel": ".meta-item", "regex": "^\\d{4}$", "all": true },
+    "airing": ".status-en-emision"
+  },
+  "lastPage": { "sel": "a[href*=/page/]", "attr": "href", "regex": "/page/(\\d+)" },
+  "airingFilter": true,
+  "catalogTotal": { "url": "{base}/wp-json/wp/v2/anime?per_page=1&_fields=id", "header": "X-WP-Total" },
+  "anime": {
+    "require": "h1.anime-hero-title",
+    "chapters": {
+      "group": ".temporada-group",
+      "groupOrder": {
+        "sel": ".temporada-name",
+        "attr": "data-season-num"
+      },
+      "item": ".capitulo-card",
+      "url": {
+        "sel": "a[href]",
+        "attr": "href"
+      },
+      "number": {
+        "sel": ".capitulo-card-title",
+        "regex": "\\d+(?:\\.\\d+)?"
+      },
+      "urlPrefix": "{base}/"
+    },
+    "genres": {
+      "idFrom": {
+        "sel": "[data-anime-id]",
+        "attr": "data-anime-id"
+      },
+      "url": "{base}/wp-json/wp/v2/anime/{id}?_fields=class_list",
+      "json": "class_list",
+      "regex": "genero-([a-z0-9-]+)"
+    }
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": ".capitulo-card",
+    "link": { "attr": "onclick", "regex": "location\\.href\\s*=\\s*'([^']+)'" },
+    "number": { "sel": ".badge-ep", "regex": "\\d+(?:\\.\\d+)?" },
+    "name": { "sel": "img", "attr": "alt" },
+    "nameStrip": "\\s+Preview de Episodio\\s+[\\d.]+\\s*$",
+    "limit": 30,
+    "dates": {
+      "url": "{base}/wp-json/wp/v2/capitulo?per_page=30&_fields=link,date_gmt",
+      "linkField": "link",
+      "dateField": "date_gmt",
+      "format": "yyyy-MM-dd'T'HH:mm:ss",
+      "tz": "UTC"
+    }
+  },
+  "schedule": { "url": "{base}/proximos-capitulos/?dia={day}", "days": 7 },
+  "servers": {
+    "item": "button.servidor-tab[data-url]",
+    "url": { "attr": "data-url" },
+    "tag": {
+      "from": { "attr": "data-idioma" },
+      "map": [ { "contains": "latino", "value": "Latino" } ],
+      "default": "SUB"
+    },
+    "order": ["SUB", "Latino"]
+  },
+  "ficha": {
+    "romaji": { "sel": "h1.anime-hero-title" },
+    "status": [{ "sel": ".anime-hero-status", "regex": "(?i)(en emisi.n|finalizad[oa])", "map": { "Finalizado": "FINISHED", "En emisión": "RELEASING", "Finalizada": "FINISHED" } }, { "sel": ".anime-info-card:has(.anime-info-label span:matchesOwn(^Estado$)) .anime-info-value span" }],
+    "startDate": { "sel": ".anime-info-card:has(.anime-info-label span:matchesOwn(^A.o$)) .anime-info-value", "regex": "^(\\d{4})$" },
+    "producers": { "sel": ".anime-info-card:has(.anime-info-label span:matchesOwn(^Estudio$)) .anime-info-value", "split": ",\\s*" },
+    "description": { "sel": ".anime-hero-description" },
+    "descriptionLanguage": "es",
+    "cover": { "sel": "meta[property=og:image]", "attr": "content" },
+    "banner": { "sel": "img.anime-hero-bg-image", "attr": "src" },
+    "trailer": { "sel": "iframe[src*=youtube.com/embed]", "attr": "src", "regex": "/embed/([A-Za-z0-9_-]{11})" },
+    "audio": { "sel": ".anime-hero-lang-seg--audio span" }
+  }
+}

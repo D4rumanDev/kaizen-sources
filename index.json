@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "version": 7,
+  "sources": [
+    {
+      "id": "animeav1",
+      "file": "animeav1.json",
+      "version": 7,
+      "sha256": "5f086d3ecb5f11f37025d9ca75b20972a674548e3a16b0d512c34c94eb0b30a5"
+    },
+    {
+      "id": "animeflv",
+      "file": "animeflv.json",
+      "version": 3,
+      "sha256": "86b064db19496762854027f1cefa97838564347aa5f905fc855f92f83653df2c"
+    },
+    {
+      "id": "animeflvar",
+      "file": "animeflvar.json",
+      "version": 3,
+      "sha256": "8597d866cddbc9cb632a7bcd628382b38f0ba618013a139c72375039c25bb20c"
+    },
+    {
+      "id": "animegratis",
+      "file": "animegratis.json",
+      "version": 6,
+      "sha256": "c81e2cf86b6946cdff2a09582fd598b1b1ab552f9e0e11af2b534fe4c9460127"
+    },
+    {
+      "id": "jkanime",
+      "file": "jkanime.json",
+      "version": 7,
+      "sha256": "48fd72f40f1f7d28ac0b16efd5116cc3ac90ce02f556038c1c21a8677edc8b60"
+    },
+    {
+      "id": "monoschinos",
+      "file": "monoschinos.json",
+      "version": 5,
+      "sha256": "b166e5ac243d41be641ebcabb8ad49dd534416142e76aef11d9bbdb731a78a73"
+    },
+    {
+      "id": "verani",
+      "file": "verani.json",
+      "version": 7,
+      "sha256": "928a4ffeb2f652494b3e84031441ea3c28554d93de9b50a779c7ef5905180b48"
+    }
+  ]
+}

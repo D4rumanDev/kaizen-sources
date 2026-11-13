@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "version": 6,
+  "id": "animegratis",
+  "name": "animegratis.net",
+  "badge": "AG",
+  "host": "animegratis.net",
+  "base": "https://animegratis.net",
+  "search": { "text": "always", "filters": ["GENRE", "AIRING", "YEAR", "SCORE", "SORT_RATING"] },
+  "listsScores": true,
+  "coverRegex": "^https://cdn\\.animegratis\\.net/anime/.+/images/cover",
+  "coverFallback": "https://cdn.animegratis.net/anime/{slug}/images/cover.webp",
+  "slug": {
+    "regex": "/anime/([a-z0-9][a-z0-9-]*?)(?:-anime|/episodio-[0-9.]+)?/?(?:[?#].*)?$"
+  },
+  "urls": {
+    "anime": "{base}/anime/{slug}-anime",
+    "chapter": "{base}/anime/{slug}/episodio-{number}",
+    "listFirst": "{base}/directorio?page={page}",
+    "listNext": "{base}/directorio?page={page}",
+    "genreFirst": "{base}/directorio/genero/{genre}?page={page}",
+    "genreNext": "{base}/directorio/genero/{genre}?page={page}"
+  },
+  "api": {
+    "url": "{base}/api/animes/directory",
+    "limit": 24,
+    "params": { "page": "page", "limit": "limit", "sort": "sort", "text": "q", "genre": "genre", "minScore": "score_min", "year": "year" },
+    "sortValues": { "title": "az", "rating": "rating" },
+    "airing": { "name": "status", "value": "En emisión" },
+    "scoreScale": 2,
+    "list": "animes",
+    "totalPages": "totalPages",
+    "fields": { "slug": "sl", "name": "t", "cover": "im", "score": "sc", "votes": "sv", "year": "yr" }
+  },
+  "cards": {
+    "item": "a[href^=/anime/]",
+    "link": { "attr": "href" },
+    "name": { "sel": "img", "attr": "alt", "regex": "^(?:Portada de )?(.+)$" },
+    "cover": { "sel": "img[src]", "attr": "src" }
+  },
+  "catalogTotal": { "url": "{base}/api/animes/directory?page=1&limit=24&sort=az", "json": "total" },
+  "anime": {
+    "require": "h1",
+    "chapters": {
+      "count": [
+        {
+          "regex": "(\\d+)\\s+episodios disponibles"
+        },
+        {
+          "regex": "(\\d+)\\s+de\\s+\\d+\\s+episodios"
+        }
+      ]
+    },
+    "genreLinks": {
+      "item": "div.flex-wrap a[href*=/directorio/genero/]",
+      "slug": "/genero/([a-z0-9-]+)/?$",
+      "nameStrip": "^[^\\p{L}]+"
+    },
+    "relations": {
+      "scope": "#seasons-carousel",
+      "link": {
+        "attr": "href"
+      },
+      "name": {
+        "attr": "title"
+      },
+      "current": "[data-saga-current]"
+    }
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": "#emisionGrid a[href*=/episodio-]",
+    "link": { "attr": "href" },
+    "number": { "sel": "img", "attr": "alt", "regex": "Episodio ([0-9.]+)$" },
+    "name": { "sel": "img", "attr": "alt", "regex": "^(.+) Episodio [0-9.]+$" },
+    "cover": { "sel": "img[src]", "attr": "src" },
+    "date": { "regex": "\\d{1,2} (?:ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)" },
+    "limit": 12
+  },
+  "schedule": {
+    "url": "{base}/horario",
+    "scoresUrl": "{base}/api/animes/directory?page=1&limit=100&sort=rating&status=En%20emisi%C3%B3n",
+    "columns": {
+      "section": "section[data-day-section]",
+      "item": "li[data-card]",
+      "link": { "sel": "a[href^=/anime/]", "attr": "href" },
+      "name": { "sel": "button[data-title]", "attr": "data-title" },
+      "cover": { "sel": "img[src]", "attr": "src" }
+    }
+  },
+  "servers": {
+    "embedded": { "marker": "{\"key\":\"", "players": "players", "name": "name", "url": "url" }
+  },
+  "ficha": {
+    "idMal": { "sel": "a[href*=myanimelist.net/anime/]", "attr": "href", "regex": "/anime/(\\d+)" },
+    "romaji": { "sel": "h1" },
+    "native": { "sel": "dt:matchesOwn(^Título japonés$) + dd" },
+    "synonyms": [{ "sel": "dt:matchesOwn(^También conocido como$) + dd", "split": "\\s+·\\s+" }],
+    "format": { "sel": "dt:matchesOwn(^Tipo$) + dd", "map": { "TV": "TV", "Película": "MOVIE", "ONA": "ONA", "OVA": "OVA", "Especial": "SPECIAL" } },
+    "status": { "sel": "dt:matchesOwn(^Estado$) + dd", "regex": "^([^·]+?)\\s*(?:·|$)", "map": { "Finalizado": "FINISHED", "En emisión": "RELEASING", "Próximamente": "NOT_YET_RELEASED" } },
+    "episodes": { "sel": "dt:matchesOwn(^Episodios$) + dd", "regex": "^(\\d+)" },
+    "duration": { "sel": "dt:matchesOwn(^Duración por episodio$) + dd", "regex": "^(\\d+)\\s*min" },
+    "season": { "sel": "dt:matchesOwn(^Temporada de estreno$) + dd", "regex": "^(\\S+)", "map": { "Invierno": "WINTER", "Primavera": "SPRING", "Verano": "SUMMER", "Otoño": "FALL" } },
+    "seasonYear": { "sel": "dt:matchesOwn(^Temporada de estreno$) + dd", "regex": "(\\d{4})" },
+    "startDate": [{ "sel": "dt:matchesOwn(^Estreno$) + dd" }, { "sel": ".ag-meta-line span", "regex": "^(\\d{4})$", "all": true }],
+    "endDate": { "sel": "dt:matchesOwn(^Final de emisión$) + dd" },
+    "countryOfOrigin": { "sel": "dt:matchesOwn(^País de origen$) + dd", "map": { "Japón": "JP" } },
+    "sourceMaterial": { "sel": "dt:matchesOwn(^Fuente original$) + dd", "map": { "Manga": "MANGA", "Novela ligera": "LIGHT_NOVEL", "Video game": "VIDEO_GAME" } },
+    "studios": { "sel": "dt:matchesOwn(^Estudio$) + dd a" },
+    "producers": { "sel": "dt:matchesOwn(^Productoras$) + dd", "split": "\\s+·\\s+" },
+    "characters": {
+      "item": "[data-ag-panel=cast] article",
+      "name": { "sel": "h3 a" },
+      "native": { "sel": "h3 + p" },
+      "role": { "sel": "span.absolute", "map": { "Principal": "MAIN", "Secundario": "SUPPORTING" } },
+      "voiceActors": { "sel": "a[href*=/seiyuu/]" }
+    },
+    "description": { "sel": "#anime-synopsis-text" },
+    "descriptionLanguage": "es",
+    "cover": { "sel": "img[src*=/images/cover]", "attr": "src" },
+    "trailer": { "sel": "[data-trailer]", "attr": "data-trailer", "regex": "/embed/([A-Za-z0-9_-]{11})" },
+    "score": { "regex": "(\\d{1,2}(?:[.,]\\d)?)\\s*/\\s*10" },
+    "votes": { "regex": "(\\d+)\\s+valoraciones" },
+    "scoreMax": 10,
+    "ageRating": { "sel": "dt:matchesOwn(^Clasificación$) + dd", "regex": "^(PG-13|PG|R\\+|R|G|Rx)(?=\\s|$)" },
+    "audio": { "sel": "dt:matchesOwn(^Audio disponible$) + dd", "split": "\\s+·\\s+" }
+  }
+}

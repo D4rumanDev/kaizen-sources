@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "version": 7,
+  "id": "jkanime",
+  "name": "jkanime.net",
+  "badge": "JK",
+  "host": "jkanime.net",
+  "base": "https://jkanime.net",
+  "search": { "text": "aloneWithYear", "filters": ["GENRE", "AIRING", "SORT_RATING", "YEAR"] },
+  "eidDouble": true,
+  "coverPrefixes": [
+    "https://cdn.jkdesa.com/assets/images/animes/image/"
+  ],
+  "coverFallback": "https://cdn.jkdesa.com/assets/images/animes/image/{slug}.jpg",
+  "slug": {
+    "regex": "^https://jkanime\\.net/([a-z0-9-]+)(?:/[0-9.]+)?/?$",
+    "reserved": [
+      "directorio",
+      "horario",
+      "estrenos",
+      "aleatorio",
+      "pedidos",
+      "comunidad",
+      "historial",
+      "guardado",
+      "notificaciones",
+      "login",
+      "aplicacion",
+      "buscar",
+      "letra",
+      "genero",
+      "tipo",
+      "usuario",
+      "salir",
+      "dash",
+      "img"
+    ]
+  },
+  "urls": {
+    "anime": "{base}/{slug}/",
+    "chapter": "{base}/{slug}/{number}/",
+    "listFirst": "{base}/directorio?p={page}",
+    "listNext": "{base}/directorio?p={page}",
+    "searchFirst": "{base}/buscar/{query}",
+    "genreParam": "genero={genre}",
+    "airingParam": "estado=emision",
+    "yearParam": "fecha={year}",
+    "sortTitleParam": "filtro=nombre&orden=asc",
+    "sortRatingParam": "filtro=popularidad"
+  },
+  "jsonList": {
+    "marker": "var animes = ",
+    "array": "data",
+    "slug": "slug",
+    "name": "title",
+    "cover": "image",
+    "total": "total"
+  },
+  "cards": {
+    "item": "div.anime__item",
+    "link": {
+      "sel": "a[href]",
+      "attr": "href"
+    },
+    "name": {
+      "sel": ".anime__item__text h5"
+    }
+  },
+  "catalogTotal": {
+    "url": "{base}/directorio?p=1&filtro=nombre&orden=asc",
+    "listVar": true
+  },
+  "anime": {
+    "require": "title",
+    "chapters": {
+      "ajax": {
+        "idRegex": "ajax/episodes/(\\d+)/",
+        "url": "{base}/ajax/episodes/{id}/{page}",
+        "request": {
+          "method": "POST",
+          "form": {
+            "_token": "{token}"
+          },
+          "headers": {
+            "Accept": "application/json"
+          },
+          "token": {
+            "sel": "meta[name=csrf-token]",
+            "attr": "content"
+          },
+          "cookies": true,
+          "referrer": true
+        },
+        "paged": {
+          "perPage": 16,
+          "total": "total",
+          "lastPage": "last_page",
+          "maxPages": 200
+        },
+        "array": "data",
+        "field": "number",
+        "date": "timestamp",
+        "dateFormat": "yyyy-MM-dd HH:mm:ss",
+        "tz": "UTC"
+      }
+    },
+    "genreLinks": {
+      "item": "li:has(> span:matchesOwn(^Generos:)) a[href*=/genero/]",
+      "slug": "/genero/([a-z0-9-]+)/?$"
+    },
+    "relations": {
+      "scope": "*:has(> h3:containsOwn(Temporadas y relacionados))",
+      "item": "a",
+      "groupItem": "h5",
+      "groupTypes": {
+        "precuela": 1,
+        "secuela": 2,
+        "ambientación alternativa": 3,
+        "ambientacion alternativa": 3,
+        "versión alternativa": 4,
+        "version alternativa": 4,
+        "historia paralela": 5,
+        "resumen": 6,
+        "historia completa": 7,
+        "historia principal": 8
+      },
+      "link": {
+        "attr": "href"
+      },
+      "name": {},
+      "nameStrip": "(?i)\\s*\\((?:Serie|TV|Pel[ií]cula|Movie|OVA|ONA|Especial|Special)\\)\\s*$"
+    }
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": "a:has(div.d-thumb)",
+    "link": {
+      "attr": "href"
+    },
+    "number": {
+      "attr": "href",
+      "regex": "/([0-9.]+)/$"
+    },
+    "name": {
+      "sel": "h5"
+    },
+    "relativeDate": {},
+    "limit": 30
+  },
+  "schedule": {
+    "url": "{base}/horario",
+    "columns": {
+      "section": "div.semana",
+      "item": "div.boxx a[href]",
+      "link": {
+        "attr": "href"
+      },
+      "name": {
+        "sel": "img",
+        "attr": "title"
+      },
+      "cover": {
+        "sel": "img",
+        "attr": "src"
+      }
+    }
+  },
+  "servers": {
+    "text": [
+      {
+        "regex": "video\\[\\d+\\]\\s*=\\s*'<iframe[^>]*src=\"(https://jkanime\\.net/jkplayer/[^\"]+)\"",
+        "name": "JKPlayer"
+      },
+      {
+        "regexArray": "(?s)servers\\s*=\\s*(\\[\\{.*?\\}\\])\\s*;",
+        "nameField": "server",
+        "urlField": "remote"
+      }
+    ]
+  },
+  "ficha": {
+    "idMal": { "sel": ".anisabi_player", "attr": "data-id", "regex": "^(\\d+)$" },
+    "romaji": [{ "sel": ".anime_info h3" }, { "sel": "title", "regex": "^(.*?)(?: - anime.*)?$" }],
+    "english": [{ "sel": ".related_div", "regex": "Ingles\\s+(.+?)\\s+Japones" }, { "sel": ".anime_info h3 + span" }],
+    "native": { "sel": ".related_div", "regex": "Japones\\s+(.+)$" },
+    "format": { "sel": "li[rel=tipo]", "regex": "Tipo:\\s*(.+)$", "map": { "Serie": "TV", "Pelicula": "MOVIE" } },
+    "status": { "sel": "li:has(> span:matchesOwn(^Estado:)) div", "map": { "Concluido": "FINISHED", "En emisión": "RELEASING" } },
+    "episodes": { "sel": "li:has(> span:matchesOwn(^Episodios:))", "regex": "Episodios:\\s*(\\d+)" },
+    "duration": { "sel": "li:has(> span:matchesOwn(^Duracion:))", "regex": "Duracion:\\s*(\\d+)\\s*min" },
+    "season": { "sel": "li:has(> span:matchesOwn(^Temporada:)) a", "regex": "^(\\S+)", "map": { "Invierno": "WINTER", "Primavera": "SPRING", "Verano": "SUMMER", "Otoño": "FALL" } },
+    "seasonYear": { "sel": "li:has(> span:matchesOwn(^Temporada:)) a", "regex": "(\\d{4})" },
+    "startDate": { "sel": "li:has(> span:matchesOwn(Emitido))", "regex": "Emitido:\\s*(.+)$" },
+    "studios": { "sel": "li:has(> span:matchesOwn(^Studios:)) a" },
+    "description": [{ "sel": "p.scroll" }, { "sel": "meta[name=description]", "attr": "content" }],
+    "descriptionLanguage": "es",
+    "cover": { "sel": "meta[property=og:image]", "attr": "content" },
+    "score": { "sel": "li:has(> span:matchesOwn(^Puntuaci))", "regex": "(\\d+(?:[.,]\\d+)?)" },
+    "scoreMax": 10,
+    "quality": { "sel": "li:has(> span:matchesOwn(^Calidad:))", "regex": "Calidad:\\s*(\\S+)" },
+    "audio": { "sel": "li:has(> span:matchesOwn(^Idiomas:)) a" }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "version": 5,
+  "id": "monoschinos",
+  "name": "monoschinos.st",
+  "badge": "MC",
+  "host": "monoschinos.st",
+  "base": "https://monoschinos.st",
+  "search": { "text": "alone", "filters": ["GENRE", "AIRING", "YEAR"] },
+  "browserUa": true,
+  "coverPrefixes": [
+    "https://monoschinos.st/assets/thumbs/imagen/",
+    "https://monoschinos.st/assets/img/serie/imagen/"
+  ],
+  "coverWeakPrefixes": ["https://monoschinos.st/assets/thumbs/portada/"],
+  "coverFallback": "https://monoschinos.st/img/anime.png",
+  "slug": {
+    "regex": "^https://monoschinos\\.st/(?:anime|ver)/([a-z0-9-]+?)(?:-sub-espanol|-episodio-[0-9.]+)?/?(?:\\?.*)?$"
+  },
+  "airingPages": 15,
+  "urls": {
+    "anime": "{base}/anime/{slug}-sub-espanol",
+    "chapter": "{base}/ver/{slug}-episodio-{number}",
+    "listFirst": "{base}/animes?p={page}",
+    "listNext": "{base}/animes?p={page}",
+    "genreFirst": "{base}/animes?p={page}&genero%5B%5D={genre}",
+    "genreNext": "{base}/animes?p={page}&genero%5B%5D={genre}",
+    "searchFirst": "{base}/buscar?q={query}",
+    "airing": "{base}/emision?p={page}",
+    "yearParam": "fecha={year}"
+  },
+  "cards": {
+    "item": "article a.card-wrap[href*=/anime/]",
+    "link": { "attr": "href" },
+    "name": [
+      { "sel": "h3.card-title" },
+      { "sel": "img[alt]", "attr": "alt" }
+    ],
+    "cover": { "sel": "img[data-src]", "attr": "data-src", "regex": "^[^?]+" },
+    "year": { "sel": "span", "regex": "^\\d{4}$", "all": true }
+  },
+  "lastPage": { "sel": "a[href*='?p=']", "attr": "href", "regex": "[?&]p=(\\d+)", "all": true },
+  "catalogTotal": { "url": "{base}/animes", "lastUrl": "{base}/animes?p={page}", "perPage": 24 },
+  "anime": {
+    "require": "h1",
+    "chapters": {
+      "ajax": {
+        "from": {
+          "sel": "section.caplist[data-ajax]",
+          "attr": "data-ajax"
+        },
+        "array": "eps",
+        "field": "num"
+      }
+    },
+    "genreLinks": {
+      "scope": "*:has(> h1)",
+      "item": "a[href*=/genero/]",
+      "slug": "/genero/([a-z0-9-]+)/?$"
+    }
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": "a.card-wrap[href*=/ver/]",
+    "link": { "attr": "href" },
+    "number": { "attr": "href", "regex": "-episodio-([0-9.]+)/?$" },
+    "name": { "sel": "h3.card-title" },
+    "cover": { "sel": "img[data-src]", "attr": "data-src", "regex": "^[^?]+" },
+    "limit": 30
+  },
+  "schedule": {
+    "url": "{base}/calendario",
+    "columns": {
+      "section": "section.day-col[data-day]",
+      "day": { "attr": "data-day" },
+      "dayNames": ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"],
+      "item": "a.rel-card[href*=/anime/]",
+      "link": { "attr": "href" },
+      "name": { "sel": "img[alt]", "attr": "alt" }
+    }
+  },
+  "servers": {
+    "item": "[data-player]",
+    "url": { "attr": "data-player" },
+    "base64": true
+  },
+  "ficha": {
+    "romaji": { "sel": "h1" },
+    "synonyms": [{ "sel": "dt:matchesOwn(^Nombre original$) + dd" }, { "sel": "dt:matchesOwn(^Nombre alternativo$) + dd", "split": "\\s+-\\s+" }],
+    "status": { "sel": "dt:matchesOwn(^Estado$) + dd", "map": { "Finalizado": "FINISHED", "En emisión": "RELEASING" } },
+    "season": { "sel": "dt:matchesOwn(^Temporada$) + dd", "regex": "^(\\S+)", "map": { "Invierno": "WINTER", "Primavera": "SPRING", "Verano": "SUMMER", "Otoño": "FALL" } },
+    "seasonYear": { "sel": "dt:matchesOwn(^Temporada$) + dd", "regex": "(\\d{4})" },
+    "startDate": [{ "sel": "dt:matchesOwn(^Emisi.n$) + dd" }, { "sel": "dt:matchesOwn(^Temporada$) + dd", "regex": "(\\d{4})" }],
+    "description": [{ "sel": "h2:matchesOwn(Sobre la serie) + *" }, { "sel": "meta[name=description]", "attr": "content" }],
+    "descriptionLanguage": "es",
+    "cover": { "sel": "meta[property=og:image]", "attr": "content", "regex": "^[^?]+" }
+  }
+}

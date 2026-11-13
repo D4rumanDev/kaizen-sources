@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "version": 3,
+  "id": "animeflv",
+  "name": "animeflv.one",
+  "badge": "AF",
+  "host": "animeflv.one",
+  "base": "https://animeflv.one",
+  "search": {
+    "text": "alone",
+    "filters": ["GENRE", "AIRING", "YEAR"]
+  },
+  "browserUa": true,
+  "coverRegex": "^https://(?:[a-z0-9-]+\\.)*animeflv\\.one/cdn/img/anime/",
+  "coverFallback": "https://animeflv.one/cdn/img/anime/{slug}.webp",
+  "slug": {
+    "regex": "^(?:https?://[^/]+/|\\./|/)?(?:anime/([a-z0-9][a-z0-9-]*)|ver/([a-z0-9][a-z0-9-]*?)-[0-9]+(?:\\.[0-9]+)?)/?(?:[?#].*)?$"
+  },
+  "urls": {
+    "anime": "{base}/anime/{slug}",
+    "chapter": "{base}/ver/{slug}-{number}",
+    "listFirst": "{base}/animes?pag={page}",
+    "listNext": "{base}/animes?pag={page}",
+    "genreFirst": "{base}/animes?pag={page}&genero={genre}",
+    "genreNext": "{base}/animes?pag={page}&genero={genre}",
+    "searchFirst": "{base}/animes?buscar={query}",
+    "searchNext": "{base}/animes?buscar={query}&pag={page}",
+    "airingParam": "estado=en-emision",
+    "yearParam": "anio={year}"
+  },
+  "cards": {
+    "item": "article.li:has(a[href*=/anime/])",
+    "link": { "sel": "a[href*=/anime/]", "attr": "href" },
+    "name": [
+      { "sel": "h3" },
+      { "sel": "img[alt]", "attr": "alt" }
+    ],
+    "cover": { "sel": "img[data-src]", "attr": "data-src", "regex": "^[^?]+" }
+  },
+  "lastPage": {
+    "sel": "a[href*='pag=']",
+    "attr": "href",
+    "regex": "[?&]pag=(\\d+)",
+    "all": true
+  },
+  "catalogTotal": {
+    "url": "{base}/animes",
+    "lastUrl": "{base}/animes?pag={page}",
+    "perPage": 24
+  },
+  "anime": {
+    "require": ".info-l .i img",
+    "chapters": {
+      "count": [
+        {
+          "sel": "script:containsData(var eps)",
+          "attr": ":data",
+          "regex": "var\\s+eps\\s*=\\s*\\[\\s*\\[\\s*[\"'](\\d+)[\"']"
+        },
+        {
+          "sel": ".info-r[data-ep]",
+          "attr": "data-ep"
+        }
+      ]
+    },
+    "genreLinks": {
+      "scope": "ul.gn",
+      "item": "a[href*=genero=]",
+      "slug": "genero=([a-z0-9-]+)"
+    }
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": "article.li:has(a[href*=/ver/])",
+    "link": { "sel": "a[href*=/ver/]", "attr": "href" },
+    "number": { "sel": "a[href*=/ver/]", "attr": "href", "regex": "-([0-9]+(?:\\.[0-9]+)?)/?$" },
+    "name": [
+      { "sel": "span" },
+      { "sel": "img[alt]", "attr": "alt", "regex": "^(.+?) episodio [0-9.]+$" }
+    ],
+    "cover": { "sel": "img[data-src]", "attr": "data-src", "regex": "^[^?]+" },
+    "limit": 30
+  },
+  "servers": {
+    "item": "li[encrypt]",
+    "url": { "attr": "encrypt" },
+    "hex": true,
+    "request": {
+      "path": "/flv",
+      "form": {
+        "acc": "opt",
+        "i": { "sel": ".opt", "attr": "data-encrypt" }
+      }
+    }
+  },
+  "ficha": {
+    "romaji": [{ "sel": ".info-l .i img", "attr": "alt" }, { "sel": "h1", "regex": "^(?:Ver )?(.+?)(?: Sub español latino Online)?$" }],
+    "status": { "sel": ".info-l .st span", "map": { "Finalizado": "FINISHED", "En emisión": "RELEASING" } },
+    "description": [{ "sel": ".info-r .tx p" }, { "sel": "meta[name=description]", "attr": "content" }],
+    "descriptionLanguage": "es",
+    "cover": { "sel": "meta[property=og:image]", "attr": "content", "regex": "^[^?]+" }
+  }
+}

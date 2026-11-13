@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "version": 3,
+  "id": "animeflvar",
+  "name": "animeflv.ar",
+  "badge": "FR",
+  "host": "animeflv.ar",
+  "base": "https://animeflv.ar",
+  "search": { "text": "alone", "filters": ["AIRING"] },
+  "browserUa": true,
+  "coverRegex": "^https://(?:i[0-9]\\.wp\\.com/)?animeflv\\.ar/wp-content/uploads/",
+  "coverFallback": "",
+  "slug": {
+    "regex": "^(?:https?://[^/]+/)?(?:anime/([a-z0-9][a-z0-9-]*)|([a-z0-9][a-z0-9-]*?)-episodio-[0-9]+(?:-[0-9]+)?-sub-espanol)/?(?:[?#].*)?$",
+    "reserved": ["page", "genres", "studio", "season", "blog", "wp-json", "cast", "director", "producer"]
+  },
+  "urls": {
+    "anime": "{base}/anime/{slug}/",
+    "chapter": "{base}/{slug}-episodio-{number}-sub-espanol/",
+    "listFirst": "{base}/anime/",
+    "listNext": "{base}/anime/?page={page}",
+    "searchFirst": "{base}/?s={query}",
+    "searchNext": "{base}/page/{page}/?s={query}",
+    "airingParam": "status=ongoing"
+  },
+  "cards": {
+    "item": "article.bs",
+    "link": { "sel": "a[href*=/anime/]", "attr": "href" },
+    "name": [
+      { "sel": "h2" },
+      { "sel": "img", "attr": "title" }
+    ],
+    "cover": { "sel": "img", "attr": "src", "regex": "^[^?]+" },
+    "airing": ".epx:matchesOwn(^Ongoing$)"
+  },
+  "lastPage": { "sel": ".hpage a.r", "attr": "href", "regex": "[?&]page=(\\d+)" },
+  "anime": {
+    "require": ".infox h1.entry-title",
+    "chapters": {
+      "item": ".eplister li",
+      "url": {
+        "sel": "a[href]",
+        "attr": "href"
+      },
+      "number": {
+        "sel": ".epl-num",
+        "regex": "^\\d+(?:\\.\\d+)?$"
+      }
+    },
+    "genreLinks": {
+      "scope": ".genxed",
+      "item": "a[href*=/genres/]",
+      "slug": "/genres/([a-z0-9-]+)/?"
+    }
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": ".listupd.normal .excstf article.bs",
+    "link": { "sel": "a[href*=-episodio-]", "attr": "href" },
+    "number": { "sel": "a[href*=-episodio-]", "attr": "href", "regex": "-episodio-([0-9]+)-sub-espanol" },
+    "name": { "sel": "h2" },
+    "nameStrip": "\\s+Episodio\\s+[0-9.]+\\s+Sub Espa.ol\\s*$",
+    "cover": { "sel": "img", "attr": "src", "regex": "^[^?]+" },
+    "limit": 30
+  },
+  "servers": {
+    "item": "select.mirror option[value]",
+    "url": { "attr": "value" },
+    "base64": true,
+    "iframe": true
+  },
+  "ficha": {
+    "romaji": { "sel": ".infox h1.entry-title" },
+    "native": { "sel": ".infox .alter", "regex": ",?\\s*([^,]*[\\u3040-\\u30ff\\u4e00-\\u9fff][^,]*)$" },
+    "synonyms": [{ "sel": ".infox .alter", "split": ",\\s*" }],
+    "format": { "sel": ".spe span:has(b:matchesOwn(^Type:$))", "regex": "Type:\\s*(.+)$", "map": { "TV": "TV", "Movie": "MOVIE", "ONA": "ONA", "OVA": "OVA", "Special": "SPECIAL", "Music": "MUSIC" } },
+    "status": { "sel": ".spe span:has(b:matchesOwn(^Status:$))", "regex": "Status:\\s*(.+)$", "map": { "Ongoing": "RELEASING", "Completed": "FINISHED", "Upcoming": "NOT_YET_RELEASED", "Hiatus": "HIATUS" } },
+    "episodes": { "sel": ".spe span:has(b:matchesOwn(^Episodes:$))", "regex": "Episodes:\\s*(\\d+)" },
+    "duration": { "sel": ".spe span:has(b:matchesOwn(^Duration:$))", "regex": "Duration:\\s*(\\d+)\\s*min" },
+    "season": { "sel": ".spe span:has(b:matchesOwn(^Season:$)) a", "regex": "^(\\S+)", "map": { "Winter": "WINTER", "Spring": "SPRING", "Summer": "SUMMER", "Fall": "FALL", "Autumn": "FALL" } },
+    "seasonYear": { "sel": ".spe span:has(b:matchesOwn(^Season:$)) a", "regex": "(\\d{4})" },
+    "startDate": { "sel": ".spe span:has(b:matchesOwn(^Released:$))", "regex": "(\\d{4})" },
+    "studios": { "sel": ".spe a[href*=/studio/]" },
+    "producers": { "sel": ".spe a[href*=/producer/]" },
+    "staff": {
+      "item": ".spe span:has(b:matchesOwn(^Director:$))",
+      "name": { "sel": "a" },
+      "role": { "regex": "^(Director):" }
+    },
+    "characters": {
+      "item": ".cvitem",
+      "name": { "sel": ".cvchar .charname" },
+      "role": { "sel": ".cvchar .charrole", "map": { "Main": "MAIN", "Supporting": "SUPPORTING", "Background": "BACKGROUND" } },
+      "voiceActors": { "sel": ".cvactor .charname a" }
+    },
+    "description": { "sel": ".synp .entry-content p" },
+    "descriptionLanguage": "en",
+    "cover": { "sel": "meta[property=og:image]", "attr": "content", "regex": "^[^?]+" }
+  }
+}

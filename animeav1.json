@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "version": 7,
+  "format": "jsData",
+  "id": "animeav1",
+  "name": "animeav1",
+  "badge": "AV1",
+  "host": "animeav1.com",
+  "base": "https://animeav1.com",
+  "search": { "text": "none", "filters": ["AIRING", "SORT_RATING"] },
+  "lightRating": false,
+  "cacheFiche": true,
+  "catalogByYearFrom": 1960,
+  "slug": { "regex": "/media/([a-z0-9-]+)" },
+  "images": {
+    "cover": "https://cdn.animeav1.com/covers/{aid}.jpg",
+    "thumbnail": "https://cdn.animeav1.com/screenshots/{aid}/{number}.jpg"
+  },
+  "urls": {
+    "anime": "{base}/media/{slug}",
+    "chapter": "{base}/media/{slug}/{number}",
+    "listFirst": "{base}/catalogo?page={page}",
+    "listNext": "{base}/catalogo?page={page}",
+    "airingParam": "status=emision",
+    "yearParam": "minYear={year}&maxYear={year}",
+    "sortTitleParam": "order=popular",
+    "sortRatingParam": "order=score"
+  },
+  "cards": {
+    "item": ".",
+    "slug": "slug",
+    "id": "id",
+    "category": "categoryId",
+    "name": "title"
+  },
+  "recents": {
+    "url": "{base}/",
+    "item": ".",
+    "slug": "media.slug",
+    "aid": "media.id",
+    "eid": "id",
+    "number": "number",
+    "name": "media.title",
+    "published": ["publishedAt", "createdAt"],
+    "publishedFormat": "yyyy-MM-dd HH:mm:ss",
+    "publishedTz": "UTC",
+    "limit": 100
+  },
+  "schedule": {
+    "url": "{base}/horario",
+    "list": {
+      "item": ".",
+      "slug": "slug",
+      "aid": "id",
+      "name": "title",
+      "category": "category.id",
+      "day": "latestEpisode.createdAt"
+    }
+  },
+  "anime": {
+    "id": "id",
+    "day": [
+      "updatedAt",
+      "startDate"
+    ],
+    "genreItems": {
+      "item": "genres",
+      "name": "name",
+      "slug": "slug"
+    },
+    "relationItems": {
+      "item": "relations",
+      "aid": "destination.id",
+      "name": "destination.title",
+      "type": "type",
+      "slug": "destination.slug"
+    },
+    "chapters": {
+      "items": {
+        "item": "episodes",
+        "eid": "id",
+        "number": "number"
+      }
+    }
+  },
+  "ficha": {
+    "idMal": "malId",
+    "romaji": "title",
+    "english": "aka.en-us",
+    "native": "aka.ja-jp",
+    "synonyms": ["aka.en-ja"],
+    "format": { "sel": "category.malId", "map": { "TV": "TV", "Movie": "MOVIE", "TV Special": "SPECIAL", "Special": "SPECIAL", "OVA": "OVA", "ONA": "ONA", "Music": "MUSIC" } },
+    "status": { "sel": "status", "map": { "0": "FINISHED", "2": "RELEASING" } },
+    "episodes": "episodesCount",
+    "duration": "runtime",
+    "startDate": "startDate",
+    "endDate": "endDate",
+    "description": "synopsis",
+    "descriptionLanguage": "es",
+    "isAdult": "mature",
+    "trailer": "trailer",
+    "score": "score",
+    "votes": "votes",
+    "scoreMax": 10
+  }
+}
